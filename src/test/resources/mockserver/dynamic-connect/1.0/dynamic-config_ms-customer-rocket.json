@@ -1,0 +1,12 @@
+{
+  "_id": "ms-customer-rocket",
+  "waitTime": 100,
+  "hotTenatIdMultipleNum": 1,
+  "maxConnction": 20,
+  "minIdleConnction": 0,
+  "idleMaxAgeInSeconds": 120,
+  "checkIntervalTime": 360,
+  "defaultAutoCommit": true,
+  "dbConfigRefreshTime": 36000,
+  "collectTime": 100
+}
