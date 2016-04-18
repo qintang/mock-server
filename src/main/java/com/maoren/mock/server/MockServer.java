@@ -14,6 +14,7 @@ import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.XmlWebApplicationContext;
@@ -64,7 +65,8 @@ public class MockServer
         https_config.addCustomizer(new SecureRequestCustomizer());
          
         SslContextFactory sslContextFactory = new SslContextFactory();
-        sslContextFactory.setKeyStorePath("keystore");
+        //sslContextFactory.setKeyStorePath("keystore");
+        sslContextFactory.setKeyStoreResource(Resource.newResource(Thread.currentThread().getContextClassLoader().getResource("keystore")));
         sslContextFactory.setKeyStorePassword("OBF:1zep1u2a1sp11y7z1sop1u301zel");
         sslContextFactory.setKeyManagerPassword("OBF:1zep1u2a1sp11y7z1sop1u301zel");
          

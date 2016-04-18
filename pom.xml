@@ -71,6 +71,15 @@
 						<configuration>
 						  <!-- <finalName>${project.artifactId}</finalName> -->
 			              <transformers>
+			                <!-- spring 打包执行报错，http://chenzhou123520.iteye.com/blog/1971322 -->
+			             	<transformer  
+		                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">  
+		                        <resource>META-INF/spring.handlers</resource>  
+		                    </transformer>  
+		                    <transformer  
+		                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">  
+		                        <resource>META-INF/spring.schemas</resource>  
+		                    </transformer>  
 			                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 			                  <manifestEntries>
 			                    <Main-Class>${app.main.class}</Main-Class>
