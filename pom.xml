@@ -16,7 +16,12 @@
 		<maven.compile.source>${basedir}/src</maven.compile.source>
 		<maven.compile.target>${basedir}/target</maven.compile.target>
 	</properties>
-
+ <distributionManagement>
+    <repository>
+      <id>maoren-mvn-repo</id>
+      <url>file:/home/maoren/maven-repo/repository/</url>
+    </repository>
+  </distributionManagement>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -57,7 +62,7 @@
   </dependencies>
   
   <build>
-		<plugins>
+		<!-- <plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -69,9 +74,9 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-						  <!-- <finalName>${project.artifactId}</finalName> -->
+						  <finalName>${project.artifactId}</finalName>
 			              <transformers>
-			                <!-- spring 打包执行报错，http://chenzhou123520.iteye.com/blog/1971322 -->
+			                spring 打包执行报错，http://chenzhou123520.iteye.com/blog/1971322
 			             	<transformer  
 		                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">  
 		                        <resource>META-INF/spring.handlers</resource>  
@@ -92,6 +97,6 @@
 					</execution>
 				</executions>
 			</plugin>
-		</plugins>
+		</plugins> -->
 	</build>
 </project>

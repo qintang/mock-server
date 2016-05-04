@@ -29,6 +29,22 @@ public class NetUtil {
 		}
 		return port;
 	}
+	
+	//找到本地有效地址数组
+	public static int[] geLocletNotUsingPort(int num){
+		int[] ports=new int[num];
+		int port= 8080;
+		while(num>0){
+			while(isLoclePortUsing(port)){
+				port++;
+			}
+			ports[num-1]=port;
+			port++;
+			num--;
+			
+		}
+		return ports;
+	}
 	/***
 	 *  true:already in using  false:not using 
 	 * @param host

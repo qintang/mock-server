@@ -14,6 +14,8 @@ import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.log.Log;
+import org.eclipse.jetty.util.log.Logger;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.springframework.web.context.ContextLoaderListener;
@@ -28,6 +30,7 @@ import com.maoren.mock.server.util.NetUtil;
  */
 public class MockServer 
 {
+	private static final Logger LOG = Log.getLogger(MockServer.class);
     public static void main( String[] args ) throws Exception
     {
         System.out.println( "welcome Mock server !" );
@@ -43,17 +46,26 @@ public class MockServer
         Server server = new Server();
         
         //自定义端口
-        int mockport=NetUtil.geLocletNotUsingPort();
-        String proPort=System.getProperty("mockport");
-        if (proPort!=null && !proPort.equals("")) {
-        	mockport=Integer.parseInt(proPort);
+        int[] ports=NetUtil.geLocletNotUsingPort(2);
+        int mockHttpPort=ports[0];
+        int mockHttpsPort=ports[1];
+        
+        String proHttpPort=System.getProperty("mockHttpPort");
+        String proHttpsPort=System.getProperty("mockHttpsPort");
+        if (proHttpPort!=null && !proHttpPort.equals("")) {
+        	mockHttpPort=Integer.parseInt(proHttpPort);
 		}
+        if (proHttpsPort!=null && !proHttpsPort.equals("")) {
+        	mockHttpsPort=Integer.parseInt(proHttpsPort);
+		}
+        
         //自定义请求文件路径
         String mockpath =System.getProperty("mockpath");
        
         //配置连接器
         ServerConnector http = new ServerConnector(server);
-		http.setPort(mockport);
+        LOG.info("====http server port:{}",mockHttpPort);
+		http.setPort(mockHttpPort);
 		//http.setHost("localhost");
 		server.addConnector(http);
         
@@ -74,9 +86,13 @@ public class MockServer
                 new SslConnectionFactory(sslContextFactory,"https/1.1"),
                 new HttpConnectionFactory(https_config));
         //httpsConnector.setPort(8443);
-        httpsConnector.setPort(mockport+1);
+        httpsConnector.setPort(mockHttpsPort);
         httpsConnector.setIdleTimeout(500000);
-        server.addConnector(httpsConnector);
+        //有配置https
+        if (proHttpsPort!=null && !proHttpsPort.equals("")) {
+        	server.addConnector(httpsConnector);
+		}
+        
         
         //log
   		NCSARequestLog requestLog = new AsyncNCSARequestLog();
@@ -116,12 +132,13 @@ public class MockServer
         hc.setHandlers(new Handler[]{requestLogHandler,mockHandler,springMVCServletHandler,resourceHandler});  
         server.setHandler(hc);  
         server.start();  
-        server.join();  
+        //server.join();  
     }
     
     public static void printHelp(){
-    	System.out.println("\njava -Dmockport=8083 -Dmockapth=/tmp mockserver.jar -h");
-    	System.out.println("   -Dmockport mockserver port");
+    	System.out.println("\njava -DmockHttpPort=8083 -DmockHttpsPort=8084 -Dmockapth=/tmp mockserver.jar -h");
+    	System.out.println("   -DmockHttpPort mockserver http port");
+    	System.out.println("   -DmockHttpsPort mockserver https port");
     	System.out.println("   -Dmockapth mockserver path,this path will must like $path/service1/1.0/GET:aa/bb/cc.json\n");
     }
 }
